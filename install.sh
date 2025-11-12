@@ -9,11 +9,11 @@ INSTALL_DIR=""
 
 # --- Helper Functions ---
 msg() {
-  echo "\033[0;32m[SpinelDB CLI Installer]\033[0m $1"
+  echo "[SpinelDB CLI Installer] $1"
 }
 
 err_exit() {
-  echo "\033[0;31m[SpinelDB CLI Installer ERROR]\033[0m $1" >&2
+  echo "[SpinelDB CLI Installer ERROR] $1" >&2
   exit 1
 }
 
