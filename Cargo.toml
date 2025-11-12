@@ -19,3 +19,4 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 rustyline = "17.0"
 futures = "0.3"
 shlex = "1"
+rpassword = "7.3"
