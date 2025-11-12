@@ -1,0 +1,21 @@
+[package]
+name = "spinel-cli"
+version = "1.0.0"
+edition = "2024"
+authors = ["SpinelDB <spineldb@gmail.com>"]
+description = "SpinelD CLI is in-memory data store written in Rust."
+license = "MIT"
+repository = "https://github.com/spineldb/spinel-cli"
+readme = "README.md"
+
+[dependencies]
+spineldb = { git = "https://github.com/spineldb/spineldb" }
+tokio = { version = "1", features = ["full"] }
+tokio-util = { version = "0.7", features = ["codec"] }
+clap = { version = "4", features = ["derive"] }
+anyhow = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rustyline = "17.0"
+futures = "0.3"
+shlex = "1"
