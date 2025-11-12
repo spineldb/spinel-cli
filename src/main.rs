@@ -74,30 +74,26 @@ async fn main() -> Result<()> {
             let mut buffer = String::new();
             io::stdin().read_to_string(&mut buffer).await?;
 
-            let commands: Vec<RespFrame> = buffer
-                .lines()
-                .filter(|line| !line.is_empty())
-                .map(|line| {
-                    let parts: Vec<String> = shlex::split(line).unwrap_or_default();
-                    RespFrame::Array(
-                        parts
-                            .into_iter()
-                            .map(|s| RespFrame::BulkString(s.into()))
-                            .collect(),
-                    )
-                })
-                .collect();
+            let lines = buffer.lines().filter(|line| !line.is_empty());
 
-            let num_commands = commands.len();
+            for line in lines {
+                let parts: Vec<String> = shlex::split(line).unwrap_or_default();
+                if parts.is_empty() {
+                    continue;
+                }
 
-            for cmd in commands {
-                if let Err(e) = framed.send(cmd).await {
+                let command = RespFrame::Array(
+                    parts
+                        .into_iter()
+                        .map(|s| RespFrame::BulkString(s.into()))
+                        .collect(),
+                );
+
+                if let Err(e) = framed.send(command).await {
                     eprintln!("Failed to send command in pipe mode: {}", e);
                     return Err(e.into());
                 }
-            }
 
-            for _ in 0..num_commands {
                 if let Some(Ok(frame)) = framed.next().await {
                     print_resp_frame_to_stdout(&frame);
                 } else {
