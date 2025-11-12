@@ -3,6 +3,7 @@ use anyhow::Result;
 use futures::{SinkExt, stream::StreamExt};
 use rustyline::{Editor, error::ReadlineError, history::DefaultHistory};
 use spineldb::core::protocol::{RespFrame, RespFrameCodec};
+use std::io;
 use std::net::SocketAddr;
 use tokio::net::TcpStream;
 use tokio::signal;
@@ -130,7 +131,19 @@ pub async fn run(initial_connection: Option<Connection>, initial_addr: SocketAdd
                                 connection = Some(conn);
                                 addr = format!("{}:{}", host, port).parse()?;
                             }
-                            Err(e) => eprintln!("Failed to connect: {}", e),
+                            Err(e) => {
+                                let error_message =
+                                    if let Some(io_err) = e.downcast_ref::<io::Error>() {
+                                        if io_err.kind() == io::ErrorKind::ConnectionRefused {
+                                            "Connection refused".to_string()
+                                        } else {
+                                            format!("{}", e)
+                                        }
+                                    } else {
+                                        format!("{}", e)
+                                    };
+                                eprintln!("Failed to connect: {}", error_message);
+                            }
                         }
                     } else {
                         eprintln!("Not connected. Please use 'connect <host> <port>'.");

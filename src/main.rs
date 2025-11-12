@@ -23,9 +23,18 @@ async fn main() -> Result<()> {
         let mut framed = match repl::try_connect(&args.host, args.port).await {
             Ok(conn) => conn,
             Err(e) => {
+                let error_message = if let Some(io_err) = e.downcast_ref::<io::Error>() {
+                    if io_err.kind() == io::ErrorKind::ConnectionRefused {
+                        "Connection refused".to_string()
+                    } else {
+                        format!("{}", e)
+                    }
+                } else {
+                    format!("{}", e)
+                };
                 eprintln!(
                     "Could not connect to SpinelDB server at {}:{}: {}",
-                    args.host, args.port, e
+                    args.host, args.port, error_message
                 );
                 return Err(e);
             }
@@ -127,9 +136,18 @@ async fn main() -> Result<()> {
             Some(conn)
         }
         Err(e) => {
+            let error_message = if let Some(io_err) = e.downcast_ref::<io::Error>() {
+                if io_err.kind() == io::ErrorKind::ConnectionRefused {
+                    "Connection refused".to_string()
+                } else {
+                    format!("{}", e)
+                }
+            } else {
+                format!("{}", e)
+            };
             eprintln!(
                 "Could not connect to SpinelDB at {}:{}: {}",
-                args.host, args.port, e
+                args.host, args.port, error_message
             );
             None
         }
