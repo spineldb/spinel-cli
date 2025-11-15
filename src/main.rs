@@ -6,6 +6,7 @@ use std::net::SocketAddr;
 use tokio::io::{self, AsyncReadExt};
 
 mod cli;
+mod commands;
 mod display;
 mod repl;
 

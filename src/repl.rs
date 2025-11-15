@@ -1,3 +1,4 @@
+use crate::commands::COMMANDS;
 use crate::display::print_resp_frame_to_stdout;
 use anyhow::Result;
 use futures::{SinkExt, stream::StreamExt};
@@ -82,6 +83,25 @@ pub async fn run(initial_connection: Option<Connection>, initial_addr: SocketAdd
                                     };
                                 eprintln!("Failed to connect: {}", error_message);
                             }
+                        }
+                    }
+                    "help" => {
+                        if let Some(subcommand) = parts.get(1) {
+                            if let Some(help) =
+                                COMMANDS.get(subcommand.to_ascii_lowercase().as_str())
+                            {
+                                println!();
+                                println!("  {}", help.usage);
+                                println!("  summary: {}", help.summary);
+                                println!("  since: {}", help.since);
+                                println!("  group: {}", help.group);
+                                println!();
+                            } else {
+                                println!("Unknown command for 'help': '{}'", subcommand);
+                            }
+                        } else {
+                            println!("To get help on a specific command, type HELP <command>");
+                            println!("To get a list of all commands, type COMMAND");
                         }
                     }
                     "auth" => {

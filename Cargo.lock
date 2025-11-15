@@ -2334,6 +2334,7 @@ dependencies = [
  "anyhow",
  "clap",
  "futures",
+ "lazy_static",
  "rpassword",
  "rustyline",
  "shlex",
