@@ -27,12 +27,16 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
             group: "geospatial",
         },
     );
-    m.insert("geopos", CommandHelp {
-        summary: "Returns the longitude and latitude of one or more members in a geospatial index.",
-        usage: "GEOPOS <key> <member> [member ...]",
-        since: "1.0.0",
-        group: "geospatial",
-    });
+    m.insert(
+        "geopos",
+        CommandHelp {
+            summary:
+                "Returns the longitude and latitude of one or more members in a geospatial index.",
+            usage: "GEOPOS <key> <member> [member ...]",
+            since: "1.0.0",
+            group: "geospatial",
+        },
+    );
     m.insert("georadius", CommandHelp {
         summary: "Finds members within a given radius from a specified longitude and latitude.",
         usage: "GEORADIUS <key> <longitude> <latitude> <radius> <unit> [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT <count>] [ASC|DESC] [STORE <key>] [STOREDIST <key>]",

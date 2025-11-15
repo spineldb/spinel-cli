@@ -36,12 +36,16 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
             group: "json",
         },
     );
-    m.insert("json.arrpop", CommandHelp {
-        summary: "Removes and returns an element from a JSON array at a specified path and index.",
-        usage: "JSON.ARRPOP <key> [path] [index]",
-        since: "1.0.0",
-        group: "json",
-    });
+    m.insert(
+        "json.arrpop",
+        CommandHelp {
+            summary:
+                "Removes and returns an element from a JSON array at a specified path and index.",
+            usage: "JSON.ARRPOP <key> [path] [index]",
+            since: "1.0.0",
+            group: "json",
+        },
+    );
     m.insert("json.arrtrim", CommandHelp {
         summary: "Trims a JSON array at a specified path to contain only the elements within the specified start and stop indices.",
         usage: "JSON.ARRTRIM <key> <path> <start> <stop>",
@@ -93,18 +97,26 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
             group: "json",
         },
     );
-    m.insert("json.numincrby", CommandHelp {
-        summary: "Increments a number at a specified path in a JSON document by a given amount.",
-        usage: "JSON.NUMINCRBY <key> <path> <number>",
-        since: "1.0.0",
-        group: "json",
-    });
-    m.insert("json.nummultby", CommandHelp {
-        summary: "Multiplies a number at a specified path in a JSON document by a given amount.",
-        usage: "JSON.NUMMULTBY <key> <path> <number>",
-        since: "1.0.0",
-        group: "json",
-    });
+    m.insert(
+        "json.numincrby",
+        CommandHelp {
+            summary:
+                "Increments a number at a specified path in a JSON document by a given amount.",
+            usage: "JSON.NUMINCRBY <key> <path> <number>",
+            since: "1.0.0",
+            group: "json",
+        },
+    );
+    m.insert(
+        "json.nummultby",
+        CommandHelp {
+            summary:
+                "Multiplies a number at a specified path in a JSON document by a given amount.",
+            usage: "JSON.NUMMULTBY <key> <path> <number>",
+            since: "1.0.0",
+            group: "json",
+        },
+    );
     m.insert(
         "json.objkeys",
         CommandHelp {
@@ -123,12 +135,16 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
             group: "json",
         },
     );
-    m.insert("json.set", CommandHelp {
-        summary: "Sets the JSON value at a specified path. Creates the key if it doesn't exist.",
-        usage: "JSON.SET <key> <path> <value> [NX|XX]",
-        since: "1.0.0",
-        group: "json",
-    });
+    m.insert(
+        "json.set",
+        CommandHelp {
+            summary:
+                "Sets the JSON value at a specified path. Creates the key if it doesn't exist.",
+            usage: "JSON.SET <key> <path> <value> [NX|XX]",
+            since: "1.0.0",
+            group: "json",
+        },
+    );
     m.insert(
         "json.strappend",
         CommandHelp {

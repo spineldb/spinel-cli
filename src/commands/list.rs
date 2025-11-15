@@ -9,18 +9,26 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
         since: "1.0.0",
         group: "list",
     });
-    m.insert("blpop", CommandHelp {
-        summary: "Removes and gets the first element in a list, or blocks until one is available.",
-        usage: "BLPOP <key> [key ...] <timeout>",
-        since: "1.0.0",
-        group: "list",
-    });
-    m.insert("brpop", CommandHelp {
-        summary: "Removes and gets the last element in a list, or blocks until one is available.",
-        usage: "BRPOP <key> [key ...] <timeout>",
-        since: "1.0.0",
-        group: "list",
-    });
+    m.insert(
+        "blpop",
+        CommandHelp {
+            summary:
+                "Removes and gets the first element in a list, or blocks until one is available.",
+            usage: "BLPOP <key> [key ...] <timeout>",
+            since: "1.0.0",
+            group: "list",
+        },
+    );
+    m.insert(
+        "brpop",
+        CommandHelp {
+            summary:
+                "Removes and gets the last element in a list, or blocks until one is available.",
+            usage: "BRPOP <key> [key ...] <timeout>",
+            since: "1.0.0",
+            group: "list",
+        },
+    );
     m.insert(
         "lindex",
         CommandHelp {

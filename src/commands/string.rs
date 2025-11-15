@@ -153,12 +153,16 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
             group: "string",
         },
     );
-    m.insert("msetnx", CommandHelp {
-        summary: "Sets multiple keys to multiple values, only if none of the keys already exist.",
-        usage: "MSETNX <key> <value> [key <value> ...]",
-        since: "1.0.0",
-        group: "string",
-    });
+    m.insert(
+        "msetnx",
+        CommandHelp {
+            summary:
+                "Sets multiple keys to multiple values, only if none of the keys already exist.",
+            usage: "MSETNX <key> <value> [key <value> ...]",
+            since: "1.0.0",
+            group: "string",
+        },
+    );
     m.insert(
         "psetex",
         CommandHelp {

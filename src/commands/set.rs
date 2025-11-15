@@ -108,12 +108,16 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
             group: "set",
         },
     );
-    m.insert("sunion", CommandHelp {
-        summary: "Returns the members of the set resulting from the union of all the given sets.",
-        usage: "SUNION <key> [key ...]",
-        since: "1.0.0",
-        group: "set",
-    });
+    m.insert(
+        "sunion",
+        CommandHelp {
+            summary:
+                "Returns the members of the set resulting from the union of all the given sets.",
+            usage: "SUNION <key> [key ...]",
+            since: "1.0.0",
+            group: "set",
+        },
+    );
     m.insert("sunionstore", CommandHelp {
         summary: "Stores the members of the set resulting from the union of all the given sets in a new key.",
         usage: "SUNIONSTORE <destination> <key> [key ...]",

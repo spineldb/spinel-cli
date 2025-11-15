@@ -30,12 +30,16 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
             group: "zset",
         },
     );
-    m.insert("zcount", CommandHelp {
-        summary: "Returns the number of members in a sorted set with scores within the given range.",
-        usage: "ZCOUNT <key> <min> <max>",
-        since: "1.0.0",
-        group: "zset",
-    });
+    m.insert(
+        "zcount",
+        CommandHelp {
+            summary:
+                "Returns the number of members in a sorted set with scores within the given range.",
+            usage: "ZCOUNT <key> <min> <max>",
+            since: "1.0.0",
+            group: "zset",
+        },
+    );
     m.insert(
         "zincrby",
         CommandHelp {
@@ -93,12 +97,16 @@ pub fn get_commands() -> HashMap<&'static str, CommandHelp> {
             group: "zset",
         },
     );
-    m.insert("zrangebylex", CommandHelp {
-        summary: "Returns all the members in a sorted set between a given lexicographical range.",
-        usage: "ZRANGEBYLEX <key> <min> <max> [LIMIT <offset> <count>]",
-        since: "1.0.0",
-        group: "zset",
-    });
+    m.insert(
+        "zrangebylex",
+        CommandHelp {
+            summary:
+                "Returns all the members in a sorted set between a given lexicographical range.",
+            usage: "ZRANGEBYLEX <key> <min> <max> [LIMIT <offset> <count>]",
+            since: "1.0.0",
+            group: "zset",
+        },
+    );
     m.insert(
         "zrangebyscore",
         CommandHelp {

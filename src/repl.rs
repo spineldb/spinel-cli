@@ -20,7 +20,11 @@ pub(crate) async fn try_connect(host: &str, port: u16) -> Result<Connection> {
     Ok(Framed::new(stream, RespFrameCodec))
 }
 
-pub async fn run(initial_connection: Option<Connection>, initial_addr: SocketAddr) -> Result<()> {
+pub async fn run(
+    initial_connection: Option<Connection>,
+    initial_addr: SocketAddr,
+    args: &crate::cli::Args,
+) -> Result<()> {
     let mut connection = initial_connection;
     let mut addr = initial_addr;
     let mut rl = Editor::<(), DefaultHistory>::new()?;
@@ -104,26 +108,61 @@ pub async fn run(initial_connection: Option<Connection>, initial_addr: SocketAdd
                             println!("To get a list of all commands, type COMMAND");
                         }
                     }
+                    "command" => {
+                        let mut commands: Vec<_> = COMMANDS.keys().collect();
+                        commands.sort();
+                        for cmd in commands {
+                            println!("- {}", cmd);
+                        }
+                    }
                     "auth" => {
                         if let Some(framed) = connection.as_mut() {
-                            let password = match rpassword::prompt_password("Password: ") {
-                                Ok(p) => p,
-                                Err(e) => {
-                                    eprintln!("Failed to read password: {}", e);
+                            let (username, password_str) = match parts.len() {
+                                2 => (None, parts.get(1).map(|s| s.to_string())),
+                                3 => (
+                                    parts.get(1).map(|s| s.to_string()),
+                                    parts.get(2).map(|s| s.to_string()),
+                                ),
+                                _ => {
+                                    eprintln!(
+                                        "Usage: AUTH <password> | AUTH <username> <password>"
+                                    );
                                     continue;
                                 }
                             };
-                            let auth_cmd = RespFrame::Array(vec![
-                                RespFrame::BulkString("AUTH".into()),
-                                RespFrame::BulkString(password.into()),
-                            ]);
+
+                            let password = if let Some(p) = password_str {
+                                p
+                            } else {
+                                match rpassword::prompt_password("Password: ") {
+                                    Ok(p) => p,
+                                    Err(e) => {
+                                        eprintln!("Failed to read password: {}", e);
+                                        continue;
+                                    }
+                                }
+                            };
+
+                            let auth_cmd = if let Some(user) = username {
+                                RespFrame::Array(vec![
+                                    RespFrame::BulkString("AUTH".into()),
+                                    RespFrame::BulkString(user.into()),
+                                    RespFrame::BulkString(password.into()),
+                                ])
+                            } else {
+                                RespFrame::Array(vec![
+                                    RespFrame::BulkString("AUTH".into()),
+                                    RespFrame::BulkString(password.into()),
+                                ])
+                            };
+
                             if let Err(e) = framed.send(auth_cmd).await {
                                 eprintln!("Failed to send AUTH command: {}", e);
                                 connection = None;
                                 continue;
                             }
                             if let Some(Ok(frame)) = framed.next().await {
-                                print_resp_frame_to_stdout(&frame);
+                                print_resp_frame_to_stdout(&frame, args);
                             } else {
                                 eprintln!("Error or server closed connection.");
                                 connection = None;
@@ -174,7 +213,7 @@ pub async fn run(initial_connection: Option<Connection>, initial_addr: SocketAdd
                                                                 } else { false }
                                                             } else { false }
                                                         } else { false };
-                                                        print_resp_frame_to_stdout(&frame);
+                                                        print_resp_frame_to_stdout(&frame, args);
                                                         if is_final { break 'unsubscribe_loop; }
                                                     }
                                                     Ok(Some(Err(e))) => { eprintln!("Error waiting for unsubscribe confirmation: {}", e); connection = None; break 'unsubscribe_loop; }
@@ -187,7 +226,7 @@ pub async fn run(initial_connection: Option<Connection>, initial_addr: SocketAdd
                                         }
                                         result = framed.next() => {
                                             match result {
-                                                Some(Ok(frame)) => print_resp_frame_to_stdout(&frame),
+                                                Some(Ok(frame)) => print_resp_frame_to_stdout(&frame, args),
                                                 Some(Err(e)) => { eprintln!("Error in Pub/Sub mode: {}", e); connection = None; break 'pubsub_loop; }
                                                 None => { println!("Server closed connection in Pub/Sub mode."); connection = None; break 'pubsub_loop; }
                                             }
@@ -197,7 +236,7 @@ pub async fn run(initial_connection: Option<Connection>, initial_addr: SocketAdd
                             } else {
                                 // Normal command
                                 if let Some(Ok(frame)) = framed.next().await {
-                                    print_resp_frame_to_stdout(&frame);
+                                    print_resp_frame_to_stdout(&frame, args);
                                 } else {
                                     eprintln!("Error or server closed connection.");
                                     connection = None;
